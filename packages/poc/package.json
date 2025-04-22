@@ -1,0 +1,24 @@
+{
+  "name": "as-stylus-poc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "asc index.ts --config asconfig.json",
+    "check": "cargo stylus check --wasm-file build/module.wasm",
+    "deploy": "PRIVATE_KEY=$PRIVATE_KEY cargo stylus deploy --wasm-file build/module.wasm --private-key $PRIVATE_KEY",
+    "increment": "cast send --rpc-url 'http://localhost:8547' --private-key 0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659 0x4a2ba922052ba54e29c5417bc979daaf7d5fe4f4 0x01"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./build/release.js",
+      "types": "./build/release.d.ts"
+    }
+  },
+  "devDependencies": {
+    "assemblyscript": "^0.27.35"
+  }
+}
