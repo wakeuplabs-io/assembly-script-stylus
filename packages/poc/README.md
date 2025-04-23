@@ -42,7 +42,7 @@ npm run deploy   # Deploy the contract to the local Nitro node
 
 After deployment, you will see an output similar to:
 
-![alt text](image.png)
+![Deployment Address](./assets/image.png)
 
 Take note of this deployed address and replace {{CONTRACT_ADDRESS}} in the examples below with it.
 
