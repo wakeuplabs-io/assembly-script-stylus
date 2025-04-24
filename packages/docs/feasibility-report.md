@@ -76,6 +76,9 @@ This is a high-level architecture intended as a starting point for development. 
 
 ![as-stylus-architecture](./assets/architecture.png)
 
+*Note:* The "AS-Stylus" module represents the ecosystem we will be building as part of this project. In contrast, "Arbitrum" refers to the set of existing technologies and infrastructure that our system will integrate with.
+
+
 ### AssemblyScript Stylus (AS-Stylus Library)
 
 This component defines the core layer for writing Stylus smart contracts in AssemblyScript. It provides the necessary abstractions and boilerplate to simplify the developer experience, while guiding the structure and syntax of contract code.
