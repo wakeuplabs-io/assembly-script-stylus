@@ -601,6 +601,6 @@ Our main objective is not only to establish a solid smart contract development f
 - [Stylus Docs](https://docs.arbitrum.io/stylus)
 - [Arbitrum Nitro GitHub](https://github.com/OffchainLabs/nitro)
 - [AssemblyScript](https://www.assemblyscript.org/)
-- [cargo-stylus](https://docs.arbitrum.io/stylus/tools/stylus-cli)
+- [cargo-stylus](https://docs.arbitrum.io/stylus/using-cli)
 - [AssemblyScript GitHub](https://github.com/wakeuplabs-io/assembly-script-stylus)
 
