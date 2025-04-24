@@ -1,3 +1,7 @@
+<p align="right">
+  <img src="assets/light-logo.png" class="logo-light" alt="Logo Light">
+</p>
+
 # Stylus: Feasibility Report
 
 ## Executive Summary
@@ -72,22 +76,25 @@ This is a high-level architecture intended as a starting point for development. 
 
 ![as-stylus-architecture](./assets/architecture.png)
 
-### Assembly Script Stylus (AS-Stylus Library)
+*Note:* The "AS-Stylus" module represents the ecosystem we will be building as part of this project. In contrast, "Arbitrum" refers to the set of existing technologies and infrastructure that our system will integrate with.
+
+
+### AssemblyScript Stylus (AS-Stylus Library)
 
 This component defines the core layer for writing Stylus smart contracts in AssemblyScript. It provides the necessary abstractions and boilerplate to simplify the developer experience, while guiding the structure and syntax of contract code.
 
 Designed to be lightweight, composable, and framework-agnostic, the component includes:
 
-- Utility functions and decorators (e.g. @entry, @view) that reduce complexity and boilerplate.
+- Utility functions and decorators (e.g. `@entry`, `@view`) that reduce complexity and boilerplate.
 - Typed bindings to Stylus host functions, enabling interaction with storage, calldata, and execution context.
 - A consistent development model that enforces best practices and improves readability.
-- Provides typed utility functions, decorators or similar assembly script resource (e.g., @entry, @view, etc.) to simplify contract logic.
+- Provides typed utility functions, decorators or similar AssemblyScript resource (e.g., `@entry`, `@view`, etc.) to simplify contract logic.
 - Ensures compatibility between AssemblyScript and Stylus runtime expectations.
 
 In essence, the component frames the developer's interaction with the Stylus VM, shaping how smart contracts are authored and encouraging clean, maintainable patterns.
 
 
-### Assembly Script Interface (AS-Stylus Interface)
+### AssemblyScript Interface (AS-Stylus Interface)
 
 
 The interface component is designed to streamline the developer experience by automating project setup and abstracting away repetitive build tasks. It acts as the bridge between developers and the Stylus toolchain, simplifying the process of building and deploying AssemblyScript contracts.
@@ -120,7 +127,7 @@ The following diagram provides a draft of how the different components interact:
 sequenceDiagram
     participant Dev as Developer
     participant AsInt as as-stylus-interface
-    participant AsSDK as as-stylus
+    participant AsSDK as as-stylus-library
     participant Stylus as cargo-stylus
 
     Dev->>AsInt: npx as-stylus generate <name>
@@ -144,7 +151,7 @@ sequenceDiagram
 
 In this architecture, the `as-stylus-interface` acts as the primary interface for the developer, simplifying interaction with the underlying toolchain during the post-development lifecycle, such as building, checking, and deploying.
 
-`as-stylus` istead, will cover all the abstractions and language definition. It will be more used in development time.
+`as-stylus-library` instead, will cover all the abstractions and language definition. It will be more used in development time.
 
 Note that this is the current architecture for the early stage of the project, and it is expected to evolve as we dive deeper into the implementation and refine the tooling.
 
@@ -165,7 +172,7 @@ It is important to note that the current implementation is not final. In subsequ
 
 Every Stylus smart contract requires an entrypoint function, which serves as the execution starting point for the virtual machine (VM). Without a defined entrypoint, the contract will fail validation during compilation.
 
-As a proof of concept, we implemented a minimal user_entrypoint in AssemblyScript that allows successful deployment and basic interaction with the Stylus VM. This entrypoint acts as a dispatcher, routing execution to different internal functions based on a selector byte.
+As a proof of concept, we implemented a minimal `user_entrypoint` in AssemblyScript that allows successful deployment and basic interaction with the Stylus VM. This entrypoint acts as a dispatcher, routing execution to different internal functions based on a selector byte.
 
 This integration with the VM has the following considerations:
 - Entrypoint is always `export function user_entrypoint(args_len: usize): i32`
@@ -217,7 +224,7 @@ When working with AssemblyScript in the context of Stylus smart contracts, it's 
 | String      | `Text`        | -                         | Array of 32 bytes    | Can represent token name, symbol, metadata, etc. Must be written/read via memory.copy |
 
 
-In assembly script is crucial to use correctly the memory to implement those types. 
+In AssemblyScript is crucial to use correctly the memory to implement those types. 
 
 ```ts=
 let heapPointer: usize = memory.size() << 16; 
@@ -263,7 +270,7 @@ When using AssemblyScript with `"runtime": "none"`, direct support for class or 
 
 Our goal is to abstract this complexity by adding a layer that simplifies these tasks for developers, similar to how the Rust SDK handles this. This layer will provide a more developer-friendly interface while maintaining the efficiency required for smart contract execution.
 
-### storage
+### Variable Scopes
 
 When writing smart contracts with Stylus and AssemblyScript, it's important to distinguish between different types of variable storage — much like in Solidity. There are three categories of variables to be aware of:
 
@@ -332,7 +339,7 @@ In the Rust SDK, hooks are grouped into categories like:
 - tx: `gas_price`, `gas_to_ink`, `ink_price`, `ink_to_gas`, `origin`
 
 
-#### How to implement in Assembly Script
+#### How to implement in AssemblyScript
 
 They appear in your `.wat` as imports:
 
@@ -404,7 +411,7 @@ export PRIVATE_KEY=...
 npm run deploy       # Deploys contract to Arbitrum
 ```
 
-**Integration with Our Workflow**
+**Integration with our workflow**
 
 As part of our proof-of-concept development, we leverage this CLI to:
 
@@ -438,11 +445,11 @@ We will document all compatibility gaps, decisions, and modifications made to ma
 
 ### Features
 
-Certain common smart contract patterns are either unsupported or must be rethought when using AssemblyScript with "runtime": "none":
+Certain common smart contract patterns are either unsupported or must be rethought when using AssemblyScript with `"runtime": "none"`:
 
 #### Inheritance: 
 
-- No Class Inheritance: Unlike Solidity or Rust, AssemblyScript without runtime support does not allow class-based inheritance. Developers must use composition or manual dispatching for code reuse.
+- **No Class Inheritance:** Unlike Solidity or Rust, AssemblyScript without runtime support does not allow class-based inheritance. Developers must use composition or manual dispatching for code reuse.
  
 #### Mitigation
 
@@ -458,18 +465,18 @@ To work around this limitation, we simulate dynamic behavior using pointers to s
 
 When targeting Stylus with AssemblyScript in `"runtime": "none"` mode, we face several important limitations due to the constraints of WebAssembly and the absence of a high-level runtime:
 
-**No Built-in Garbage Collection**
+#### No Built-in Garbage Collection
 
 WebAssembly does not include garbage collection (GC) by default. While some runtimes (like JavaScript engines) offer GC, Stylus does not. This means:
 
 - Memory must be managed manually.
 - There is no automatic reclamation of unused memory.
 
-**Mitigation**
+##### Mitigation
 
 In our implementation, we must allocate and free memory deliberately using custom malloc implementations.
 
-**No Runtime Support**
+#### No Runtime Support
 
 Because we run AssemblyScript without its standard runtime (`--runtime none`), we lose access to many high-level features typically expected in a language like TypeScript:
 
@@ -478,24 +485,25 @@ Because we run AssemblyScript without its standard runtime (`--runtime none`), w
 - No automatic serialization or type reflection
 - No out-of-the-box helper functions for conversions or I/O
 
+##### Mitigation
 This forces us to work at a much lower level of abstraction:
 
 - All data structures (e.g., text fields, arrays) must be manually encoded into memory
 - Functions like storeU64, loadU64, etc., must be written to handle binary layout and alignment
 - Complex types (like structs or maps) need to be emulated using consistent memory layouts and offsets
 
-**Manual Serialization Required**
+#### Manual Serialization Required
 
 Any value written to or read from storage, memory, or returned via hooks must be serialized and deserialized manually. This adds both implementation complexity and potential for bugs.
 
-**Limited Type Support**
+#### Limited Type Support
 
 Due to the lack of runtime features, only a subset of AssemblyScript's types are practical to use:
 
 - Raw primitives (`u8`, `u32`, `u64`, `bool`) are preferred
 - Higher-order structures (like `Map`, `Set`, or `class instances`) are not usable out-of-the-box
 
-**Summary**
+### Summary
 
 These constraints push us toward a minimalistic and WASM-friendly coding model that focuses on:
 
@@ -512,13 +520,13 @@ To mitigate developer friction, we aim to abstract these patterns into reusable 
 
 A key goal of this project is to improve the smart contract development experience by abstracting low-level WASM and memory operations behind a clean and intuitive interface.
 
-**Syntactic Rules and Developer Simplicity**
+#### Syntactic Rules and Developer Simplicity
 
 To achieve a more accessible developer experience, we plan to define syntactic and design rules that promote consistency and simplicity when writing contracts. While we're still in the early phases and cannot yet propose a complete contract example, these patterns will emerge and solidify as the implementation progresses.
 
 The objective is to hide the complexity of memory management, serialization, and VM hook integration — allowing developers to focus on logic, not infrastructure.
 
-**Abstractions**
+#### Abstractions
 
 We aim to provide reusable, opinionated utilities and primitives that:
 
@@ -529,7 +537,7 @@ We aim to provide reusable, opinionated utilities and primitives that:
 
 This will make writing smart contracts feel more ergonomic and maintainable, even under the constraints of AssemblyScript + WASM.
 
-**Error Handling and Debugging**
+#### Error Handling and Debugging
 
 Currently, AssemblyScript's `"runtime": "none"` mode presents challenges:
 
@@ -537,7 +545,7 @@ Currently, AssemblyScript's `"runtime": "none"` mode presents challenges:
 - Type mismatches or incorrect memory operations can cause silent failures or unexpected results
 - Runtime exceptions (e.g. accessing uninitialized memory) may be difficult to trace
 
-**Testing and Debugging Scope**
+#### Testing and Debugging Scope
 
 Testing and debugging workflows in AssemblyScript + Stylus are still in a very early stage, and we do not commit to fully addressing these challenges within this project. The complexity of building a complete testing framework, proper error tracing, or a robust debugging environment is significant and would require a dedicated initiative.
 
@@ -550,7 +558,7 @@ Some current limitations include:
 While we may experiment with minimal tooling or include basic examples to support our contract development, a comprehensive testing or debugging solution is out of scope for this work. However, we will document any useful workarounds or insights that emerge during development to help guide future efforts in this area.
 
 
-**Path Forward**
+#### Path Forward
 
 To address these concerns, we plan to:
 
@@ -604,3 +612,5 @@ Our main objective is not only to establish a solid smart contract development f
 - [cargo-stylus](https://docs.arbitrum.io/stylus/using-cli)
 - [AssemblyScript GitHub](https://github.com/wakeuplabs-io/assembly-script-stylus)
 
+---
+#### ❤️ Made with love by WakeUp Labs team ❤️
