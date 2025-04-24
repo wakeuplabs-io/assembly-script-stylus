@@ -1,24 +1,5 @@
-<style>
-  .logo-light {
-    display: block;
-  }
-  .logo-dark {
-    display: none;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .logo-light {
-      display: none;
-    }
-    .logo-dark {
-      display: block;
-    }
-  }
-</style>
-
 <p align="right">
   <img src="assets/light-logo.png" class="logo-light" alt="Logo Light">
-  <img src="assets/dark-logo.png" class="logo-dark" alt="Logo Dark" height="60px" width="120">
 </p>
 
 # Stylus: Feasibility Report
