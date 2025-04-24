@@ -613,4 +613,9 @@ Our main objective is not only to establish a solid smart contract development f
 - [AssemblyScript GitHub](https://github.com/wakeuplabs-io/assembly-script-stylus)
 
 ---
-#### ❤️ Made with love by WakeUp Labs team ❤️
+<p align="center">
+  Made by WakeUp Labs team
+  <img src="assets/light-logo.png" class="logo-light" alt="Logo Light">
+</p>
+
+
