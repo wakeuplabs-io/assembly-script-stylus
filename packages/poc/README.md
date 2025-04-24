@@ -8,6 +8,19 @@ This is a simple Proof of Concept demonstrating how to build, deploy, and intera
 
 ### 1. Start Nitro Dev Node
 
+Stylus is available on Arbitrum Sepolia, but we'll use nitro devnode which has a pre-funded wallet saving us the effort of wallet provisioning or running out of tokens to send transactions.
+
+Install your devnode
+
+```bash=
+git clone https://github.com/OffchainLabs/nitro-devnode.git
+cd nitro-devnode
+```
+Launch your devnode
+```bash=
+./run-dev-node.sh
+```
+
 Clone and run the Nitro dev node:
 
 ```bash
@@ -16,6 +29,7 @@ cd path/to/nitro-devnode
 ```
 
 > This will start a local Stylus-compatible Arbitrum node at `http://localhost:8547`.
+See more details in the [official documentation](https://docs.arbitrum.io/stylus/quickstart#setting-up-your-development-environment).
 
 ---
 
@@ -51,19 +65,19 @@ Take note of this deployed address and replace {{CONTRACT_ADDRESS}} in the examp
 ### Increment Counter
 
 ```bash
-cast send --rpc-url http://localhost:8547   --private-key 0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659  {{CONTRACT_ADDRESS}} 0x01
+export CONTRACT_ADDRESS = "..."
+cast send --rpc-url http://localhost:8547   --private-key 0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659 $CONTRACT_ADDRESS 0x01
 ```
-
 ### Decrement Counter
 
 ```bash
-cast send --rpc-url http://localhost:8547   --private-key 0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659 {{CONTRACT_ADDRESS}} 0x02
+cast send --rpc-url http://localhost:8547   --private-key 0xb6b15c8cb491557369f3c7d2c287b053eb229daa9c22138887752191c9520659 $CONTRACT_ADDRESS 0x02
 ```
 
 ### Read Counter Value
 
 ```bash
-cast call --rpc-url http://localhost:8547 {{CONTRACT_ADDRESS}} 0x03
+cast call --rpc-url http://localhost:8547 $CONTRACT_ADDRESS 0x03
 ```
 
 ---
