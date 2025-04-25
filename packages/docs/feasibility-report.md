@@ -1,5 +1,5 @@
 <p align="right">
-  <img src="assets/light-logo.png" class="logo-light" alt="Logo Light">
+  <img src="assets/light-logo.png" class="logo-light" alt="Logo Light" width=200 height=60>
 </p>
 
 # Stylus: Feasibility Report
@@ -615,5 +615,5 @@ Our main objective is not only to establish a solid smart contract development f
 ---
 <p align="center">
    Made by WakeUp Labs team <br/>
-   <img src="assets/light-logo.png" class="logo-light" alt="Logo Light">
+   <img src="assets/light-logo.png" class="logo-light" alt="Logo Light" width=200 height=60>
  </p>
